@@ -33,7 +33,7 @@
         permission: public-read
         bucket: "{{ zuul_log_bucket }}"
         file_root: "{{ zuul.executor.log_root }}"
-        prefix: "{{ zuul_log_path }}"
+        key_prefix: "{{ zuul_log_path }}"
       register: upload_results
 
 - name: Return log URL to Zuul
