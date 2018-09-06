@@ -12,7 +12,7 @@
       run_once: true
       copy:
         src: index.html
-        dest: "{{ zuul.executor.log_root }}/{{ zuul_log_path }}/index.html"
+        dest: "{{ zuul.executor.log_root }}/index.html"
 
     # Use chmod instead of file because ansible 2.5 file with recurse and
     # follow can't really handle symlinks to .
