@@ -1,6 +1,8 @@
 Upload logs to an S3 bucket
 
-This uploads logs to an AWS S3 Bucket
+This uploads logs to an AWS S3 Bucket.
+
+.. _tree :: http://mama.indstate.edu/users/ice/tree/
 
 **Role Variables**
 

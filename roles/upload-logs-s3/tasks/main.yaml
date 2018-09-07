@@ -7,12 +7,11 @@
 - when: zuul_site_upload_logs | default(true) | bool or
         (zuul_site_upload_logs == 'failure' and not zuul_success | bool)
   block:
-    - name: Copy index.html for log indexing
-      delegate_to: localhost
-      run_once: true
-      copy:
-        src: index.html
-        dest: "{{ zuul.executor.log_root }}/index.html"
+    - name: Make an index.html if we have none
+      command: tree -H . -T Logs -o index.html
+      args:
+        chdir: "{{ zuul.executor.log_root }}"
+        creates: "{{ zuul.executor.log_root }}/index.html"
 
     # Use chmod instead of file because ansible 2.5 file with recurse and
     # follow can't really handle symlinks to .
