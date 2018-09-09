@@ -1,7 +1,12 @@
+- job:
+    name: test-pip-and-virtualenv
+    parent: gm-base
+    run: playbooks/test-pip-and-virtualenv.yaml
+
 - project:
     check:
       jobs:
-        - noop
+        - test-pip-and-virtualenv
     gate:
       jobs:
-        - noop
+        - test-pip-and-virtualenv

@@ -1,0 +1,40 @@
+- name: Install distutils
+  become: true
+  package:
+    name: python3-distutils
+
+- name: Do we already have pip?
+  stat:
+    path: /usr/bin/pip
+  register: usr_bin_pip
+
+- name: Install pip
+  when: not usr_bin_pip.stat.exists
+  block:
+  - name: Create a tempdir
+    tempfile:
+      state: directory
+    register: workspace
+
+  - name: Grab get-pip.py
+    get_url:
+      url: https://bootstrap.pypa.io/get-pip.py
+      dest: "{{ workspace.path }}/get-pip.py"
+
+  - name: Install pip
+    become: true
+    command: python3 {{ workspace.path }}/get-pip.py
+    args:
+      creates: /usr/bin/pip
+
+  always:
+  - name: cleanup tempdir
+    file:
+      state: absent
+      path: "{{ workspace.path }}"
+    when: workspace is defined
+
+- name: Install virtualenv
+  become: true
+  pip:
+    name: virtualenv

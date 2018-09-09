@@ -1,0 +1,17 @@
+- name: Install pip and virtualenv
+  hosts: all
+  roles:
+    - pip-and-virtualenv
+
+- name: test that it worked
+  hosts: all
+  tasks:
+    - name: Make a tempdir for the venv
+      tempfile:
+        state: directory
+      register: workspace
+
+    - name: pip install something small
+      pip:
+        name: flamel
+        virtualenv: "{{ workspace.path }}/flamel"
