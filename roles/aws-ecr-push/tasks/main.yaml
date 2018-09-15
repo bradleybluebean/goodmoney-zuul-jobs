@@ -1,0 +1,5 @@
+- name: Push to ECR
+  ecr_push:
+    region: "{{ aws_ecr_push_region }}"
+    image: "{{ aws_ecr_push_image }}"
+    tag: "{{ aws_ecr_push_tag }}"
