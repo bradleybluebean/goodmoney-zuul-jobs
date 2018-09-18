@@ -9,7 +9,6 @@
     virtualenv: "{{ venv_home.path }}/boto3"
 
 - name: Get a session token
-  no_log: true
   vars:
     ansible_python_interpreter: "{{ venv_home.path }}/boto3/bin/python"
   sts_session_token:
@@ -25,7 +24,6 @@
     state: directory
 
 - name: Write it out for jobs to use
-  no_log: true
   copy:
     dest: ~/.aws/credentials
     content: |
