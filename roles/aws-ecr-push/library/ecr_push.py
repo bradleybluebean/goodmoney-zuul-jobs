@@ -31,7 +31,7 @@ def run(result, module):
         if module.check_mode:
             repo_objects[m_repo] = None
         else:
-            repo_objects[m_repo] = client.m_repository(repositoryName=m_repo)
+            repo_objects[m_repo] = client.create_repository(repositoryName=m_repo)
     if missing_repos:
         result['changed'] = True
     for image, repo in repo_objects.items():

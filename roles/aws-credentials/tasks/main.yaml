@@ -1,0 +1,23 @@
+- name: Get a session token
+  no_log: true
+  sts_session_token:
+    aws_access_key: "{{ aws_credentials.access_key }}"
+    aws_secret_key: "{{ aws_credentials.secret_key }}"
+    region: "{{ aws_credentials.region }}"
+    duration_seconds: "{{ zuul.timeout }}"
+  register: st
+
+- name: Make aws creds home
+  file:
+    path: ~/.aws
+    state: directory
+
+- name: Write it out for jobs to use
+  no_log: true
+  copy:
+    dest: ~/.aws/credentials
+    content: |
+      [default]
+      aws_access_key_id={{ st.st_creds.access_key }}
+      aws_secret_access_key={{ st.st_creds.secret_key }}
+      aws_session_token={{ st.st_creds.session_token }}
