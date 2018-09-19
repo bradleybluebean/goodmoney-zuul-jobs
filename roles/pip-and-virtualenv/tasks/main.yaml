@@ -5,11 +5,11 @@
 
 - name: Do we already have pip?
   stat:
-    path: /usr/bin/pip
-  register: usr_bin_pip
+    path: /usr/local/bin/pip
+  register: usr_local_bin_pip
 
 - name: Install pip
-  when: not usr_bin_pip.stat.exists
+  when: not usr_local_bin_pip.stat.exists
   block:
   - name: Create a tempdir
     tempfile:
