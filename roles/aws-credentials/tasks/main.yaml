@@ -1,16 +1,9 @@
-- name: Make a venv home
-  tempfile:
-    state: directory
-  register: venv_home
-
 - name: Ensure boto3
-  pip:
-    name: boto3
-    virtualenv: "{{ venv_home.path }}/boto3"
+  become: true
+  apt:
+    name: python3-boto3
 
 - name: Get a session token
-  vars:
-    ansible_python_interpreter: "{{ venv_home.path }}/boto3/bin/python"
   sts_session_token:
     aws_access_key: "{{ aws_credentials.access_key }}"
     aws_secret_key: "{{ aws_credentials.secret_key }}"
