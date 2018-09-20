@@ -43,7 +43,7 @@ def run(result, module):
                 auth_token['authorizationData'][0]['authorizationToken'])
             username, password = auth_token.decode('utf-8').split(':', 1)
             repo_url = repo['repositoryUri']
-            dc = docker.Client(version='auto')
+            dc = docker.APIClient(version='auto')
             dc.login(
                 username=username,
                 password=password,
@@ -67,13 +67,13 @@ def run(result, module):
 def main():
     result = dict(changed=False)
     try:
-        if not all(boto3, botocore, docker):
+        if not all((boto3, botocore, docker)):
             raise Exception(
                 'Requires boto3, botocore, and docker python modules.')
         module_args = dict(
-            name=dict(type='str', required=True),
             image=dict(type='list', required=True),
             tag=dict(type='str', required=False),
+            region=dict(type='str', required=False),
         )
         # TODO: add the ec2/aws args the way other ec2 modules do
 
@@ -82,9 +82,9 @@ def main():
             supports_check_mode=True,
         )
 
-        module.exit_json(**run(result))
+        module.exit_json(**run(result, module))
     except Exception as e:
-        module.fail_json(msg=str(e), **result)
+        module.fail_json(msg='Failure: %s(%s)' % (type(e), str(e)), **result)
 
 
 if __name__ == '__main__':
