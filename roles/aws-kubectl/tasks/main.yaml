@@ -1,0 +1,21 @@
+- name: Install cli tools
+  become: true
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: "0755"
+  loop:
+    - url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
+      dest: /usr/bin/aws-iam-authenticator
+    - url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/kubectl
+      dest: /usr/bin/kubectl
+
+- name: Make .kube
+  file:
+    path: ~/.kube
+    state: directory
+
+- name: Create kube config
+  template:
+    src: kube.config.j2
+    dest: ~/.kube/config
