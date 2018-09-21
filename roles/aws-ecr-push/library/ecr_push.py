@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import base64
+import json
 try:
     import boto3
     import botocore
@@ -58,7 +59,13 @@ def run(result, module):
             dc.tag(image_id, **kwa)
             kwa['stream'] = False
             if not module.check_mode:
-                dc.push(**kwa)
+                push_result = dc.push(**kwa)
+                result['push_results'] = []
+                for line in push_result.splitlines():
+                    this_result = json.loads(line)
+                    result['push_results'].append(this_result)
+                    if 'error' in this_result:
+                        module.fail_json(msg=this_result['error'])
             result['changed'] = True
 
     return result
