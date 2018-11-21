@@ -1,0 +1,10 @@
+- name: Build images
+  become: true
+  become_user: "{{ docker_build_user }}"
+  command: >-
+    docker build -t {{ docker_build_image_tag }}
+    {%- if docker_build_dockerfile|default('') %}-f {{ docker_build_dockerfile }}{% endif -%}
+    {{ docker_build_args|default('') }}
+    .
+  args:
+    chdir: "{{ docker_build_src_dir }}"

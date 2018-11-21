@@ -1,0 +1,7 @@
+- name: Ensure lifecycel policy is set
+  become: true
+  become_user: "{{ aws_ecr_push_user }}"
+  gm_ecs_ecr:
+    region: "{{ aws_ecr_push_region }}"
+    name: "{{ aws_ecr_push_image }}"
+    lifecycle_policy: "{{ aws_ecr_push_post_lifecycle_policy }}"

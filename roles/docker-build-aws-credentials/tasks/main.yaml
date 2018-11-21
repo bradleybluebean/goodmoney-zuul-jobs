@@ -1,0 +1,13 @@
+- name: Make build aws home
+  become: true
+  become_user: "{{ docker_build_user }}"
+  file:
+    path: ~/.aws
+    state: directory
+- name: copy creds to build user
+  become: true
+  copy:
+    remote_src: true
+    src: "~{{ ansible_user }}/.aws/credentials"
+    dest: "~{{ docker_build_user }}/.aws/credentials"
+    owner: "{{ docker_build_user }}"

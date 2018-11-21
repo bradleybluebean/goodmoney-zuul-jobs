@@ -1,0 +1,7 @@
+- job:
+    parent: with-ecr-credentials
+    name: test-aws-ecr
+    final: true
+    protected: true
+    pre-run: tests/aws-ecr/pre.yaml
+    run: tests/aws-ecr/run.yaml

@@ -1,0 +1,4 @@
+- name: Push to ECR
+  hosts: all
+  roles:
+    - aws-ecr-push-post

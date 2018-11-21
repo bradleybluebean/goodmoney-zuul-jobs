@@ -1,0 +1,21 @@
+# See: https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html
+aws_ecr_push_post_lifecycle_policy:
+  rules:
+    - rulePriority: 1
+      description: "Always keep current pipeline"
+      selection:
+        tagStatus: tagged
+        tagPrefixList:
+          - "{{ zuul.pipeline }}"
+        countType: imageCountMoreThan
+        countNumber: 50
+      action:
+        type: expire
+    - rulePriority: 100
+      description: "Keep newest 20 otherwise"
+      selection:
+        tagStatus: any
+        countType: imageCountMoreThan
+        countNumber: 20
+      action:
+        type: expire

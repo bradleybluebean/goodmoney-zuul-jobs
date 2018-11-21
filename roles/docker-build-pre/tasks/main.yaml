@@ -1,0 +1,11 @@
+- name: Ensure docker is instelled
+  apt:
+    name: docker.io
+    update_cache: true
+  become: true
+- name: Create a non-privileged user for talking to it 
+  user:
+    name: "{{ docker_build_user }}"
+    groups: docker
+    append: true
+  become: true

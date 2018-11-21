@@ -4,6 +4,10 @@ This pushes images that exist in a local docker daemon into an AWS ECR
 registry. It uses configured AWS credentials according to boto's usual pattern
 of loading credentials.
 
+Assumes docker is installed, and by default, that there is an unprivileged
+user named `build` that has permissions to the docker socket. See `docker-build-pre`
+for an example of how to set a box up for this role to work properly.
+
 **Role Variables**
 
 .. zuul:rolevar:: aws_ecr_push_region
@@ -19,3 +23,8 @@ of loading credentials.
    :default: latest
 
    This is the tag to give any uploaded images.
+
+.. zuul:rolevar:: aws_ecr_push_user
+   :default: build
+
+   User account name to use for communicating with docker.

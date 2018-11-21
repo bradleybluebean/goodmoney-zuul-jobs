@@ -1,0 +1,7 @@
+dependencies:
+- role: aws-ecr-push
+  aws_ecr_push_tag: "{{ zuul.build }}"
+- role: aws-ecr-push
+  aws_ecr_push_tag: "{{ zuul.pipeline }}"
+- role: aws-ecr-push
+  aws_ecr_push_tag: "{{ zuul.newrev|default(zuul.change) }}"
