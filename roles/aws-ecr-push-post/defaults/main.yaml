@@ -6,7 +6,7 @@ aws_ecr_push_post_lifecycle_policy:
       selection:
         tagStatus: tagged
         tagPrefixList:
-          - "{{ zuul.pipeline }}"
+          - "pipeline_{{ zuul.pipeline }}"
         countType: imageCountMoreThan
         countNumber: 50
       action:
