@@ -1,0 +1,8 @@
+- job:
+    parent: with-ecr-credentials
+    name: aws-ecr-push-post
+    abstract: true
+    description: >
+      Parent to this with `aws_ecr_push_image` and `aws_ecr_push_region` set to
+      push docker images in to AWS ECR in a post-commit pipeline.
+    run: playbooks/aws-ecr-push-post/run.yaml

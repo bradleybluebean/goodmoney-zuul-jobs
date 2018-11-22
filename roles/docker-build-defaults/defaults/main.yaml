@@ -1,0 +1,5 @@
+docker_build_user: build
+docker_build_image_tag: "{{ zuul.project.name }}"
+docker_build_src_dir: "{{ zuul.project.src_dir }}"
+# docker_build_dockerfile: ''
+# docker_build_args: ''
