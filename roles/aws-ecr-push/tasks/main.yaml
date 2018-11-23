@@ -5,3 +5,8 @@
     region: "{{ aws_ecr_push_region }}"
     image: "{{ aws_ecr_push_image }}"
     tag: "{{ aws_ecr_push_tag }}"
+  register: aws_ecr_push_result
+
+- name: Show push results
+  debug:
+    var: aws_ecr_push_result
