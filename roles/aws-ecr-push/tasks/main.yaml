@@ -7,6 +7,6 @@
     tag: "{{ aws_ecr_push_tag }}"
   register: aws_ecr_push_result
 
-- name: Save image repo
-  set_fact:
-    aws_ecr_push_repos: "{{ aws_ecr_push_repos|default({}).update(aws_ecr_push_result.repos)}}"
+- name: Show push results
+  debug:
+    var: aws_ecr_push_result
