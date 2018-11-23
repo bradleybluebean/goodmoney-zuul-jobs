@@ -44,6 +44,10 @@ def run(result, module):
                 auth_token['authorizationData'][0]['authorizationToken'])
             username, password = auth_token.decode('utf-8').split(':', 1)
             repo_url = repo['repositoryUri']
+            if 'repos' in result:
+                result['repos'][image] = repo_url
+            else:
+                result['repos'] = {image: repo_url}
             dc = docker.APIClient(version='auto')
             dc.login(
                 username=username,
@@ -55,18 +59,27 @@ def run(result, module):
             # Tag to the new repo
             kwa = dict(repository=repo_url)
             if module.params['tag']:
-                kwa['tag'] = module.params['tag']
-            dc.tag(image_id, **kwa)
-            kwa['stream'] = False
-            if not module.check_mode:
-                push_result = dc.push(**kwa)
-                result['push_results'] = []
-                for line in push_result.splitlines():
-                    this_result = json.loads(line)
-                    result['push_results'].append(this_result)
-                    if 'error' in this_result:
-                        module.fail_json(msg=this_result['error'])
-            result['changed'] = True
+                tags = module.params['tag']
+            else:
+                tags = [None]
+            result['push_results'] = []
+            for tag in tags:
+                if tag:
+                    kwa['tag'] = tag
+                if not module.check_mode:
+                    dc.tag(image_id, **kwa)
+                    push_result = dc.push(**kwa)
+                    for line in push_result.splitlines():
+                        this_result = json.loads(line)
+                        result['push_results'].append(this_result)
+                        if 'error' in this_result:
+                            module.fail_json(msg=this_result['error'])
+                if tag:
+                    if 'tags' in result:
+                        result['tags'][image].append(tag)
+                    else:
+                        result['tags'] = {image: [tag]}
+                result['changed'] = True
 
     return result
 
@@ -74,20 +87,19 @@ def run(result, module):
 def main():
     result = dict(changed=False)
     try:
-        if not all((boto3, botocore, docker)):
-            raise Exception(
-                'Requires boto3, botocore, and docker python modules.')
         module_args = dict(
             image=dict(type='list', required=True),
-            tag=dict(type='str', required=False),
+            tag=dict(type='list', required=False),
             region=dict(type='str', required=False),
         )
         # TODO: add the ec2/aws args the way other ec2 modules do
-
         module = AnsibleModule(
             argument_spec=module_args,
             supports_check_mode=True,
         )
+        if not all((boto3, botocore, docker)):
+            raise Exception(
+                'Requires boto3, botocore, and docker python modules.')
 
         module.exit_json(**run(result, module))
     except Exception as e:
