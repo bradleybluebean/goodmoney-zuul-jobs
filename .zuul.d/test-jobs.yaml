@@ -5,3 +5,10 @@
     protected: true
     pre-run: tests/aws-ecr/pre.yaml
     run: tests/aws-ecr/run.yaml
+
+- job:
+    parent: gm-base
+    name: test-git-crypt
+    final: true
+    protected: true
+    run: tests/git-crypt/run.yaml
