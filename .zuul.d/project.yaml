@@ -14,7 +14,9 @@
     check:
       jobs:
         - test-pip-and-virtualenv
+        - test-git-crypt
     gate:
       jobs:
         - test-pip-and-virtualenv
+        - test-git-crypt
         - test-aws-ecr

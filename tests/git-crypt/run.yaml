@@ -1,0 +1,81 @@
+- name: Pre-reqs
+  hosts: all
+  roles:
+    - ensure-git-crypt
+
+- name: Fake repo
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Mkdir
+      register: tdir
+      tempfile:
+        state: directory
+    - name: Save tdir as a fact
+      set_fact:
+        git_crypt_repo: "{{ tdir.path }}"
+    - command: git config --global user.email "nobody@nowhere.test"
+    - command: git config --global user.name "Test"
+    - name: Initialize
+      command: git init
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: Add initial content
+      copy:
+        content: "test.secret filter=git-crypt diff=git-crypt\n"
+        dest: "{{ git_crypt_repo }}/.gitattributes"
+    - name: git add
+      command: git add .
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: git commit
+      command: git commit -m 'adding init content'
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: git crypt init
+      command: git crypt init
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: Make a spot for key
+      tempfile:
+        state: directory
+      register: temp_key_storage
+    - name: Grab the key
+      register: git_crypt_export_key
+      command: git crypt export-key {{ temp_key_storage.path }}/temp.key
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: Slurp key
+      slurp:
+        src: "{{ temp_key_storage.path }}/temp.key"
+      register: temp_key
+    - name: Set the key fact
+      set_fact:
+        git_crypt_key: "{{ temp_key.content }}"
+    - name: Add a secret
+      copy:
+        content: "s3cr3t\n"
+        dest: "{{ git_crypt_repo }}/test.secret"
+    - name: git add
+      command: git add .
+      args:
+        chdir: "{{ git_crypt_repo }}"
+    - name: git commit
+      command: git commit -m 'adding test.secret'
+      args:
+        chdir: "{{ git_crypt_repo }}"
+
+- name: Test the roles
+  gather_facts: false
+  hosts: all
+  roles:
+    - git-crypt-lock
+    - git-crypt-unlock
+  tasks:
+    - name: Slurp the unlocked secret
+      register: slurped_secret
+      slurp:
+        src: "{{ git_crypt_repo }}/test.secret"
+    - name:
+      assert:
+        that: slurped_secret.content | b64decode == "s3cr3t\n"

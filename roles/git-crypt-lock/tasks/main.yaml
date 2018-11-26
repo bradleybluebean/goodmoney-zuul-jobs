@@ -1,0 +1,6 @@
+- name: Lock down the repo so we don't leave secrets behind
+  register: git_crypt_lock
+  failed_when: false
+  command: git crypt lock
+  args:
+    chdir: "{{ git_crypt_repo }}"

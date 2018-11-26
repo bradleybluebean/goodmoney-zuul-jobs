@@ -1,0 +1,42 @@
+- name: Unlock git repo 
+  block:
+    - name: Make a mount point for ram disk
+      become: true
+      file:
+        state: directory
+        path: "{{ git_crypt_keystorage }}"
+        mode: '0711'
+
+    - name: Make a ramdisk to write out key
+      become: true
+      mount:
+        src: ramfs
+        fstype: ramfs
+        opts: "size=8M"
+        path: "{{ git_crypt_keystorage }}"
+        state: mounted
+    - name: Write key out
+      become: true
+      copy:
+        content: "{{ git_crypt_key|b64decode }}" # Assuming content is no_log
+        dest: "{{ git_crypt_keystorage }}/gitcrypt.key"
+        mode: '0600'
+        owner: "{{ ansible_user }}"
+    - name: Unlock repo
+      command: git crypt unlock {{ git_crypt_keystorage }}/gitcrypt.key
+      args:
+        chdir: "{{ git_crypt_repo }}"
+#  always:
+#    - name: Unmount key storage ramdisk
+#      become: true
+#      mount:
+#        src: ramfs
+#        fstype: ramfs
+#        opts: "size=8M"
+#        path: "{{ git_crypt_keystorage }}"
+#        state: absent
+#    - name: Remove key storage mount point
+#      become: true
+#      file:
+#        state: absent
+#        path: "{{ git_crypt_keystorage }}"
