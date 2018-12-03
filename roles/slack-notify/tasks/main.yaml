@@ -1,0 +1,64 @@
+- debug: var=zuul_success
+- name: First pass facts
+  set_fact:
+    slack_notify_status: >-
+      {% if zuul_success is defined %}
+        {%- if zuul_success|bool -%}
+          SUCCESS
+        {%- else -%}
+          FAILURE
+        {%- endif -%}
+      {%- else -%}
+        RUNNING
+      {%- endif -%}
+    slack_notify_title: "{{ zuul.project.name }} - {{ zuul.job }}"
+
+- name: Second pass facts
+  set_fact:
+    slack_notify_text: |-
+      `{{ slack_notify_title }}`{% if zuul_success is defined %} has {% if zuul_success|bool %}succeeded! {{ slack_notify_success_emoji }}{% else %}failed! {{ slack_notify_failure_emoji }}{% endif %}{% else %} is running in the {{ zuul.pipeline }} pipeline.{% endif %}
+
+- name: Third pass facts
+  set_fact:
+    slack_notify_color: |-
+      {% if slack_notify_status == "SUCCESS" %}good{% elif slack_notify_status == "FAILURE" %}danger{% else %}{{ slack_notify_normal_color }}{% endif %}
+    slack_notify_fields:
+      - title: Message
+        value: "{{ slack_notify_text }}"
+        short: false
+      - title: Project
+        value: "{{ zuul.project.name }}"
+        short: true
+      - title: Ref
+        value: "{{ zuul.ref }}"
+        short: true
+      - title: Job
+        value: "<{{slack_notify_zuul_url}}/job/{{zuul.job}}|{{zuul.job}}>"
+        short: true
+      - title: Build
+        value: "<{{slack_notify_zuul_url}}/build/{{zuul.build}}|{{zuul.build}}>"
+      - title: Status
+        value: "{{ slack_notify_status }}"
+        short: true
+
+- name: Create attachments
+  set_fact:
+    slack_notify_attachments:
+      - fallback: "{{ slack_notify_text }}"
+        title: "{{ slack_notify_title }}"
+        title_link: "{{ slack_notify_zuul_url }}/build/{{ zuul.build }}"
+        color: "{{ slack_notify_color }}"
+        fields: "{{ slack_notify_fields }}"
+
+- name: Send a notification to slack
+  slack:
+    attachments: "{{ slack_notify_attachments }}"
+    token: "{{ slack_notify_token }}"
+    channel: "{{ item }}"
+    icon_url: "{{ slack_notify_icon }}"
+    icon_emoji: "{{ slack_notify_emoji }}"
+    link_names: "{{ slack_notify_link_names }}"
+    username: "{{ slack_notify_username }}"
+    color: "{{ slack_notify_color }}"
+  delegate_to: localhost
+  loop: "{{ slack_notify_channels }}"
