@@ -60,5 +60,4 @@
     link_names: "{{ slack_notify_link_names }}"
     username: "{{ slack_notify_username }}"
     color: "{{ slack_notify_color }}"
-  delegate_to: localhost
   loop: "{{ slack_notify_channels }}"
