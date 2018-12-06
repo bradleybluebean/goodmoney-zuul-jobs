@@ -9,3 +9,6 @@ slack_notify_username: Zuul
 slack_notify_normal_color: '#439FE0' # A nice calm blue
 slack_notify_success_emoji: ':thumbsup_all:'
 slack_notify_failure_emoji: ':face_palm:'
+slack_notify_msg: "{{ omit }}"
+# Set to 'attachments' to get a more vertical, informative message
+slack_notify_appearance: line
