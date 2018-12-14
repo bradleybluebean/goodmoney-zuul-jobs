@@ -4,11 +4,16 @@
     - role: docker-build
       docker_build_image_tag: test-aws-ecr
       docker_build_src_dir: "{{ zuul.project.src_dir }}/tests/aws-ecr/docker"
+    - role: docker-build
+      docker_build_image_tag: test-aws-ecr-2
+      docker_build_src_dir: "{{ zuul.project.src_dir }}/tests/aws-ecr/docker"
 
 - name: Push to ecr
   hosts: all
   become: true
   roles:
     - role: aws-ecr-push-post
-      aws_ecr_push_image: test-aws-ecr
+      aws_ecr_push_image:
+        - test-aws-ecr
+        - test-aws-ecr-2
       aws_ecr_push_region: us-west-2

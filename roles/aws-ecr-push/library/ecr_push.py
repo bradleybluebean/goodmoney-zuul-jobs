@@ -32,9 +32,10 @@ def run(result, module):
         if module.check_mode:
             repo_objects[m_repo] = None
         else:
-            repo_objects[m_repo] = client.create_repository(repositoryName=m_repo)
+            repo_objects[m_repo] = client.create_repository(repositoryName=m_repo)['repository']
     if missing_repos:
         result['changed'] = True
+    result['push_results'] = []
     for image, repo in repo_objects.items():
         # Now get the url and auth token
         if repo:
@@ -62,7 +63,6 @@ def run(result, module):
                 tags = module.params['tag']
             else:
                 tags = [None]
-            result['push_results'] = []
             for tag in tags:
                 if tag:
                     kwa['tag'] = tag
@@ -76,7 +76,10 @@ def run(result, module):
                             module.fail_json(msg=this_result['error'])
                 if tag:
                     if 'tags' in result:
-                        result['tags'][image].append(tag)
+                        if image in result['tags']:
+                            result['tags'][image].append(tag)
+                        else:
+                            result['tags'][image] = [tag]
                     else:
                         result['tags'] = {image: [tag]}
                 result['changed'] = True
