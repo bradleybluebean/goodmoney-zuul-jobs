@@ -12,11 +12,12 @@
         RUNNING
       {%- endif -%}
     slack_notify_title: "{{ zuul.project.name }} - {{ zuul.job }}"
+    slack_notify_checkout: "{{ zuul.projects[zuul.project.canonical_name].checkout }}"
 
 - name: Second pass facts
   set_fact:
     slack_notify_text: |-
-      `{{ slack_notify_title }}`{% if zuul_success is defined %} has {% if zuul_success|bool %}succeeded! {{ slack_notify_success_emoji }}{% else %}failed! {{ slack_notify_failure_emoji }}{% endif %}{% else %} is running in the {{ zuul.pipeline }} pipeline.{% endif %}
+      `{{ slack_notify_title }}` - `{{ slack_notify_checkout }}`{% if zuul_success is defined %} has {% if zuul_success|bool %}succeeded! {{ slack_notify_success_emoji }}{% else %}failed! {{ slack_notify_failure_emoji }}{% endif %}{% else %} is running in the {{ zuul.pipeline }} pipeline.{% endif %}
 
 - name: Third pass facts
   set_fact:
@@ -29,8 +30,8 @@
       - title: Project
         value: "{{ zuul.project.name }}"
         short: true
-      - title: Ref
-        value: "{{ zuul.ref }}"
+      - title: Checkout
+        value: "{{ slack_notify_checkout }}"
         short: true
       - title: Job
         value: "<{{slack_notify_zuul_url}}/job/{{zuul.job}}|{{zuul.job}}>"
