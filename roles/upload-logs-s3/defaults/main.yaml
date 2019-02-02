@@ -1,1 +1,2 @@
 zuul_log_bucket_base_url: "http://{{ zuul_log_bucket }}.s3-website-{{ zuul_log_aws_region }}.amazonaws.com"
+zuul_log_s3_permission: public-read
