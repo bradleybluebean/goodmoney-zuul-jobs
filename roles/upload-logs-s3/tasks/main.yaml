@@ -29,7 +29,7 @@
         aws_secret_key: "{{ zuul_log_aws_credentials.secret_key|default(omit) }}"
         region: "{{ zuul_log_aws_region }}"
         mode: push
-        permission: public-read
+        permission: "{{ zuul_log_s3_permission }}"
         bucket: "{{ zuul_log_bucket }}"
         file_root: "{{ zuul.executor.log_root }}"
         key_prefix: "{{ zuul_log_path }}"
