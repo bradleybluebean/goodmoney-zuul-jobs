@@ -3,13 +3,6 @@
     parent: gm-base
     run: playbooks/test-pip-and-virtualenv.yaml
 
-- job:
-    name: with-ecr-credentials
-    parent: gm-base
-    pre-run: playbooks/pre-aws-ecr-credentials.yaml
-    secrets:
-      - aws_ecr_credentials
-
 - project:
     check:
       jobs:
