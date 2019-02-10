@@ -1,5 +1,5 @@
 - job:
-    parent: with-ecr-credentials2
+    parent: with-ecr-credentials
     name: aws-ecr-push-post
     abstract: true
     description: >
