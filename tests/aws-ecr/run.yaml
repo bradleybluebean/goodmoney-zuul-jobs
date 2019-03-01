@@ -17,3 +17,8 @@
         - test-aws-ecr
         - test-aws-ecr-2
       aws_ecr_push_region: us-west-2
+    - role: aws-ecr-promote
+      aws_ecr_promote_image:
+        - test-aws-ecr
+        - test-aws-ecr-2
+      aws_ecr_promote_region: us-west-2
