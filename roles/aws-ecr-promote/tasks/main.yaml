@@ -6,3 +6,4 @@
     image: "{{ aws_ecr_promote_image }}"
     from: "change_{{ zuul.change }}"
     to: pipeline_{{ zuul.pipeline }}
+  register: aws_ecr_promote
