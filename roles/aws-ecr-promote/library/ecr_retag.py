@@ -45,13 +45,17 @@ def run(result, module):
             (user, password) = token.decode('ascii').split(':', 2)
             auth = (user, password)
             repo_url = "https://{}".format(repo['repositoryUri'])
+            if repo_url.startswith('https://'):
+                image_ref = repo_url.split('https://')[1]
+            else:
+                image_ref = repo_url
+            if 'repos' in result:
+                result['repos'][image] = image_ref
+            else:
+                result['repos'] = {image: image_ref}
             # The url is the pull URI, but we want the base registry URI so we
             # can talk to the registry v2 API
             repo_url = repo_url.rsplit('/', 1)[0]
-            if 'repos' in result:
-                result['repos'][image] = repo_url
-            else:
-                result['repos'] = {image: repo_url}
             # Fetch manifest for from token
             from_tag = module.params['from']
             manifest = session.get("{uri}/v2/{image}/manifests/{tag}".format(
