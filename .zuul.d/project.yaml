@@ -8,8 +8,10 @@
       jobs:
         - test-pip-and-virtualenv
         - test-git-crypt
+        - test-install-kubectl
     gate:
       jobs:
         - test-pip-and-virtualenv
         - test-git-crypt
+        - test-install-kubectl
         - test-aws-ecr

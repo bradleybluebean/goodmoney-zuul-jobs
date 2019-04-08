@@ -12,3 +12,14 @@
     final: true
     protected: true
     run: tests/git-crypt/run.yaml
+
+- job:
+    parent: gm-base
+    name: test-install-kubectl
+    run: tests/k8s/run.yaml
+    final: true
+    protected: true
+    nodeset:
+      nodes:
+        - label: ubuntu1804-micro
+          name: builder

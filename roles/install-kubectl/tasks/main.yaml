@@ -1,0 +1,16 @@
+- name: Grab version with curl
+  when: kubectl_version is not defined
+  command: curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
+  changed_when: false
+  register: kubectl_curl
+
+- name: Extract version
+  when: kubectl_curl is defined
+  set_fact:
+    kubectl_version: "{{ kubectl_curl.stdout_lines[0] }}"
+
+- name: Download kubectl
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl
+    dest: /usr/bin/kubectl
+    mode: '0755'
