@@ -23,3 +23,14 @@
       nodes:
         - label: ubuntu1804-micro
           name: builder
+
+- job:
+    parent: gm-base
+    name: test-aws-kubeconfig
+    run: tests/aws-kubeconfig/run.yaml
+    final: true
+    protected: true
+    nodeset:
+      nodes:
+        - label: ubuntu1804-micro
+          name: builder

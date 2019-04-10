@@ -9,9 +9,11 @@
         - test-pip-and-virtualenv
         - test-git-crypt
         - test-install-kubectl
+        - test-aws-kubeconfig
     gate:
       jobs:
         - test-pip-and-virtualenv
         - test-git-crypt
         - test-install-kubectl
         - test-aws-ecr
+        - test-aws-kubeconfig

@@ -1,0 +1,75 @@
+- name: Make config
+  hosts: all
+  vars:
+    aws_targets:
+      - name: test-1
+        kube_api_endpoint: http://server-1.test/api
+        kube_api_ca_data: 0123456789ABCDEF
+        kube_api_name: k8s-test-1-noexist
+      - name: test-2
+        kube_api_endpoint: http://server-2.test/api
+        kube_api_ca_data: BEDDEA154BEAD500
+        kube_api_name: k8s-test-2-noexist
+    intended_kube_config:
+      current-context: test-1
+      kind: Config
+      preferences: {}
+      apiVersion: v1
+      clusters:
+        - cluster:
+            server: http://server-1.test/api
+            certificate-authority-data: 0123456789ABCDEF
+          name: test-1
+        - cluster:
+            server: http://server-2.test/api
+            certificate-authority-data: BEDDEA154BEAD500
+          name: test-2
+      contexts:
+        - context:
+            cluster: test-1
+            user: test-1
+          name: test-1
+        - context:
+            cluster: test-2
+            user: test-2
+          name: test-2
+      users:
+        - name: test-1
+          user:
+            exec:
+              apiVersion: client.authentication.k8s.io/v1alpha1
+              command: aws-iam-authenticator
+              args:
+                - "token"
+                - "-i"
+                - k8s-test-1-noexist
+        - name: test-2
+          user:
+            exec:
+              apiVersion: client.authentication.k8s.io/v1alpha1
+              command: aws-iam-authenticator
+              args:
+                - "token"
+                - "-i"
+                - k8s-test-2-noexist
+  tasks:
+    - include_role:
+        name: aws-kubectl
+    - slurp:
+        src: "~/.kube/config"
+      register: kube_config
+    - set_fact:
+        kube_config: "{{ kube_config.content|b64decode|from_yaml }}"
+    - tempfile:
+        state: directory
+      register: tdir
+    - copy:
+        content: "{{ kube_config|to_nice_yaml }}"
+        dest: "{{ tdir.path }}/999kube_config.yaml"
+    - copy:
+        content: "{{ intended_kube_config|to_nice_yaml }}"
+        dest: "{{ tdir.path }}/000intended_kube_config.yaml"
+    - shell: diff -u {{ tdir.path }}/*.yaml
+    - file:
+        path: "{{ tdir.path }}"
+        state: absent

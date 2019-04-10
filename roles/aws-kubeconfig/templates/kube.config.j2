@@ -1,0 +1,30 @@
+current-context: {{ aws_targets[0].name }}
+kind: Config
+preferences: {}
+apiVersion: v1
+clusters:
+{% for context in aws_targets %}
+- cluster:
+    server: {{ context.kube_api_endpoint }}
+    certificate-authority-data: {{ context.kube_api_ca_data }}
+  name: {{ context.name }}
+{% endfor %}
+contexts:
+{% for context in aws_targets %}
+- context:
+    cluster: {{context.name }}
+    user: {{ context.name }}
+  name: {{ context.name }}
+{% endfor %}
+users:
+{% for context in aws_targets %}
+- name: {{ context.name }}
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws-iam-authenticator
+      args:
+        - "token"
+        - "-i"
+        - "{{ context.kube_api_name }}"
+{% endfor %}
