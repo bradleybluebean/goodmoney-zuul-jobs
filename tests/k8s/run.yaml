@@ -1,0 +1,10 @@
+- name: Install kubectl
+  hosts: all
+  become: true
+  roles:
+    - install-kubectl
+
+- name: Sanity check
+  hosts: all
+  tasks:
+    - command: kubectl version --client=true
