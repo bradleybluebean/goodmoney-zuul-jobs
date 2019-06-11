@@ -1,7 +1,9 @@
 - name: Install distutils
   become: true
-  package:
+  apt:
     name: python3-distutils
+    state: latest
+    update_cache: yes
 
 - name: Do we already have pip?
   stat:
