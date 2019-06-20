@@ -4,6 +4,6 @@
   ecr_retag:
     region: "{{ aws_ecr_promote_region }}"
     image: "{{ aws_ecr_promote_image }}"
-    from: "change_{{ zuul.change }}"
+    from: "change_{{ zuul.project.short_name }}_{{ zuul.change }}"
     to: pipeline_{{ zuul.pipeline }}
   register: aws_ecr_promote

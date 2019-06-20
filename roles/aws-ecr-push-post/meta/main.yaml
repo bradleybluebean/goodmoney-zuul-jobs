@@ -3,4 +3,4 @@ dependencies:
   aws_ecr_push_tag:
     - build_{{ zuul.build }}
     - pipeline_{{ zuul.pipeline }}
-    - "{%- if zuul.newrev is defined %}newrev_{{ zuul.newrev }}{%- else -%}change_{{ zuul.change }}{%- endif -%}"
+    - "{%- if zuul.newrev is defined %}newrev_{{ zuul.newrev }}{%- else -%}change_{{ zuul.project.short_name }}_{{ zuul.change }}{%- endif -%}"
