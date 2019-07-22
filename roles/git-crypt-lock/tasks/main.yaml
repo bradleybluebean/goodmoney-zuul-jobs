@@ -1,6 +1,8 @@
 - name: Lock down the repo so we don't leave secrets behind
+  vars:
+    git_crypt_key_arg: "{% if git_crypt_key_name %}-k {{ git_crypt_key_name }} {% endif %}" 
   register: git_crypt_lock
   failed_when: false
-  command: git crypt lock
+  command: "git crypt lock {{ git_crypt_key_arg }}"
   args:
     chdir: "{{ git_crypt_repo }}"

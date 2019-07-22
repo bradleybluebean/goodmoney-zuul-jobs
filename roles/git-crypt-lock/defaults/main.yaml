@@ -1,1 +1,2 @@
 git_crypt_repo: "{{ zuul.project.src_dir }}"
+git_crypt_key_name: ""
