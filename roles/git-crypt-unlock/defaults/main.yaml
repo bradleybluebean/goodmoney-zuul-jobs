@@ -1,2 +1,3 @@
 git_crypt_keystorage: /mnt/keystorage
+git_crypt_key_name: ""
 git_crypt_repo: "{{ zuul.project.src_dir }}"
