@@ -23,9 +23,7 @@
         mode: '0600'
         owner: "{{ ansible_user }}"
     - name: Unlock repo
-      vars:
-        git_crypt_key_arg: "{% if git_crypt_key_name %}-k {{ git_crypt_key_name }} {% endif %}" 
-      command: git crypt unlock {{ git_crypt_key_arg }}{{ git_crypt_keystorage }}/gitcrypt.key
+      command: git crypt unlock {{ git_crypt_keystorage }}/gitcrypt.key
       args:
         chdir: "{{ git_crypt_repo }}"
 #  always:
