@@ -10,12 +10,6 @@ a repo that has been encrypted with `git-crypt`_.
    The secret key that will be used to unlock the repo. Must be a base64
    encoded ascii string.
 
-.. zuul:rolevar:: git_crypt_key_name
-   :default: ""
-
-   A string representing the name of the git-crypt key with which to unlock the
-   repo. If left blank, the default git-crypt key is used.
-
 .. zuul:rolevar:: git_crypt_repo
    :default: {{ zuul.project.src_dir }}
 
