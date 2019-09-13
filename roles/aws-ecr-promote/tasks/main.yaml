@@ -1,6 +1,4 @@
 - name: Retag uploaded image to pipeline
-  become: true
-  become_user: "{{ aws_ecr_promote_user }}"
   ecr_retag:
     region: "{{ aws_ecr_promote_region }}"
     image: "{{ aws_ecr_promote_image }}"

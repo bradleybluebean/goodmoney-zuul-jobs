@@ -16,8 +16,3 @@ gate-built-and-tested images once the commit has landed.
    Either a single string or list of strings representing the names of the
    local images to retag.
 
-.. zuul:rolevar:: aws_ecr_push_user
-   :default: build
-
-   User account name to become - should be the user who has AWS credentials
-   already configured.
