@@ -1,5 +1,0 @@
-- name: Do privileged things to enable build and push
-  hosts: all
-  become: true
-  roles:
-    - docker-build-aws-credentials
