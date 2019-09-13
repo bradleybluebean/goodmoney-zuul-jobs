@@ -1,0 +1,28 @@
+- name: Ensure boto3
+  become: true
+  apt:
+    name: python3-boto3
+    update_cache: true
+
+- name: Assume Role
+  sts_assume_role:
+    role_arn: "arn:aws:iam::{{ aws_account_id }}:role/{{ role_name }}"
+    role_session_name: "{{ role_session_name }}"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ aws_credentials.access_key }}"
+    aws_secret_key: "{{ aws_credentials.secret_key }}"
+  register: assumed_role
+ 
+- name: Make aws creds home
+  file:
+    path: ~/.aws
+    state: directory
+
+- name: Write it out for jobs to use
+  copy:
+    dest: ~/.aws/credentials
+    content: |
+      [default]
+      aws_access_key_id={{ assumed_role.sts_creds.access_key }}
+      aws_secret_access_key={{ assumed_role.sts_creds.secret_key }}
+      aws_session_token={{ assumed_role.sts_creds.session_token }}

@@ -4,9 +4,7 @@ This pushes images that exist in a local docker daemon into an AWS ECR
 registry. It uses configured AWS credentials according to boto's usual pattern
 of loading credentials.
 
-Assumes docker is installed, and by default, that there is an unprivileged
-user named `build` that has permissions to the docker socket. See `docker-build-pre`
-for an example of how to set a box up for this role to work properly.
+Assumes docker is installed.
 
 This role will record all of the repos it has touched in a variable,
 `aws_ecr_push_repos`.

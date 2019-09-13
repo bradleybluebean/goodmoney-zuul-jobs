@@ -10,7 +10,6 @@
 
 - name: Push to ecr
   hosts: all
-  become: true
   roles:
     - role: aws-ecr-push-post
       aws_ecr_push_image:

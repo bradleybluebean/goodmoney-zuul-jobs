@@ -1,6 +1,4 @@
 - name: Push to ECR
-  become: true
-  become_user: "{{ aws_ecr_push_user }}"
   ecr_push:
     region: "{{ aws_ecr_push_region }}"
     image: "{{ aws_ecr_push_image }}"
