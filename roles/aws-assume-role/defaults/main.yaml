@@ -1,4 +1,0 @@
-aws_account_id: 585011123913
-role_name: packer
-role_session_name: sandboxAssumeRole
-aws_region: us-east-1
