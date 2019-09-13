@@ -1,2 +1,1 @@
-This is designed to be run after `docker-build-pre` in situations where
-AWS credentials are available.
+This is designed to be in situations where AWS credentials are available.
