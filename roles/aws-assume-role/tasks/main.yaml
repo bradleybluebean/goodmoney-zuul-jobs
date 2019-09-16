@@ -6,8 +6,8 @@
 
 - name: Assume Role
   sts_assume_role:
-    role_arn: "arn:aws:iam::{{ aws_account_id }}:role/{{ role_name }}"
-    role_session_name: "{{ role_session_name }}"
+    role_arn: "arn:aws:iam::{{ aws_account_id }}:role/{{ aws_role_name }}"
+    role_session_name: "{{ aws_role_session_name }}"
     region: "{{ aws_region }}"
     aws_access_key: "{{ aws_credentials.access_key }}"
     aws_secret_key: "{{ aws_credentials.secret_key }}"
