@@ -1,5 +1,5 @@
 - job:
-    parent: with-ecr-credentials
+    parent: with-aws_root_account
     name: test-aws-ecr
     final: true
     protected: true
