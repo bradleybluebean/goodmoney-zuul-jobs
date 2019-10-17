@@ -9,8 +9,8 @@
     role_arn: "arn:aws:iam::{{ aws_account_id }}:role/{{ aws_role_name }}"
     role_session_name: "{{ aws_role_name }}AssumeRole"
     region: "{{ aws_region }}"
-    aws_access_key: "{{ aws_credentials.access_key }}"
-    aws_secret_key: "{{ aws_credentials.secret_key }}"
+    aws_access_key: "{{ credentials.access_key }}"
+    aws_secret_key: "{{ credentials.secret_key }}"
   register: assumed_role
  
 - name: Make aws creds home
