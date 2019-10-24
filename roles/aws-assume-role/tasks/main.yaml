@@ -4,15 +4,28 @@
     name: python3-boto3
     update_cache: true
 
-- name: Assume Role
+- name: Assume Roles
   sts_assume_role:
-    role_arn: "arn:aws:iam::{{ aws_account_id }}:role/{{ aws_role_name }}"
+    role_arn: "arn:aws:iam::{{ item.account_id }}:role/{{ aws_role_name }}"
     role_session_name: "{{ aws_role_name }}AssumeRole"
     region: "{{ aws_region }}"
     aws_access_key: "{{ credentials.access_key }}"
     aws_secret_key: "{{ credentials.secret_key }}"
   register: assumed_role
- 
+  with_items: "{{ aws_accounts }}"
+
+- name: Assemble credentials file contents
+  vars:
+    credentials_text: ''
+  set_fact:
+    credentials_text: |
+      {{ credentials_text }}
+      [{{ item.item.profile }}]
+      aws_access_key_id={{ item.sts_creds.access_key }}
+      aws_secret_access_key={{ item.sts_creds.secret_key }}
+      aws_session_token={{ item.sts_creds.session_token }}
+  with_items: "{{ assumed_role.results }}"
+
 - name: Make aws creds home
   file:
     path: ~/.aws
@@ -21,8 +34,4 @@
 - name: Write it out for jobs to use
   copy:
     dest: ~/.aws/credentials
-    content: |
-      [default]
-      aws_access_key_id={{ assumed_role.sts_creds.access_key }}
-      aws_secret_access_key={{ assumed_role.sts_creds.secret_key }}
-      aws_session_token={{ assumed_role.sts_creds.session_token }}
+    content: "{{ credentials_text }}"
