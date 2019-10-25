@@ -1,14 +1,3 @@
-- name: Install Missing PIP dependencies
-  hosts: all
-  tasks:
-    - name: Pip Install
-      become: true
-      pip:
-        name:
-          - boto3
-          - botocore
-          - docker
-
 - name: Build docker
   hosts: all
   roles:

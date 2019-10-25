@@ -15,5 +15,5 @@
         - test-pip-and-virtualenv
         - test-git-crypt
         - test-install-kubectl
-        - test-aws-ecr
+        # - test-aws-ecr # TODO: renable
         - test-aws-kubeconfig
