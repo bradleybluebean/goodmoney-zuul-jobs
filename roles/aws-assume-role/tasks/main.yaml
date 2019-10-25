@@ -15,7 +15,7 @@
   with_items: "{{ aws_accounts }}"
 
 - name: Assemble credentials file contents
-  no_log: True
+  no_log: true
   vars:
     credentials_text: ''
   set_fact:
