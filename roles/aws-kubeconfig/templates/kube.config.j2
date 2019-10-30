@@ -11,14 +11,14 @@ clusters:
   name: {{ context.name }}
 {% endfor %}
 contexts:
-{% for context in aws_targets %}
+{% for context in aws_targets.k8s %}
 - context:
     cluster: {{context.name }}
     user: {{ context.name }}
   name: {{ context.name }}
 {% endfor %}
 users:
-{% for context in aws_targets %}
+{% for context in aws_targets.k8s %}
 - name: {{ context.name }}
   user:
     exec:
