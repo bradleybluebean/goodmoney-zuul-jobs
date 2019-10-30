@@ -1,23 +1,24 @@
-current-context: {{ aws_targets[0].name }}
+{% if aws_targets.k8s is defined %}
+current-context: {{ aws_targets.k8s[0].name }}
 kind: Config
 preferences: {}
 apiVersion: v1
 clusters:
-{% for context in aws_targets %}
+{% for context in aws_targets.k8s %}
 - cluster:
     server: {{ context.kube_api_endpoint }}
     certificate-authority-data: {{ context.kube_api_ca_data }}
   name: {{ context.name }}
 {% endfor %}
 contexts:
-{% for context in aws_targets %}
+{% for context in aws_targets.k8s %}
 - context:
     cluster: {{context.name }}
     user: {{ context.name }}
   name: {{ context.name }}
 {% endfor %}
 users:
-{% for context in aws_targets %}
+{% for context in aws_targets.k8s %}
 - name: {{ context.name }}
   user:
     exec:
@@ -28,3 +29,4 @@ users:
         - "-i"
         - "{{ context.kube_api_name }}"
 {% endfor %}
+{% endif %}

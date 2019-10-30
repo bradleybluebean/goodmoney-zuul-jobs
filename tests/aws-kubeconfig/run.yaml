@@ -2,6 +2,7 @@
   hosts: all
   vars:
     aws_targets:
+      k8s:
       - name: test-1
         kube_api_endpoint: http://server-1.test/api
         kube_api_ca_data: 0123456789ABCDEF
