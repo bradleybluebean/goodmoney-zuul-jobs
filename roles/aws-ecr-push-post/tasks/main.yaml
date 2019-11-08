@@ -1,6 +1,6 @@
 - name: Ensure lifecycle policy is set
   gm_ecs_ecr:
-    region: "{{ aws_region }}"
+    region: "{{ aws_ecr_push_region }}"
     name: "{{ image }}"
     lifecycle_policy: "{{ aws_ecr_push_post_lifecycle_policy }}"
     profile: "{{ account.profile_name }}"
