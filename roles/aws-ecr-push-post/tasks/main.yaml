@@ -3,8 +3,8 @@
     region: "{{ aws_ecr_push_region }}"
     name: "{{ image }}"
     lifecycle_policy: "{{ aws_ecr_push_post_lifecycle_policy }}"
-    profile: "{{ account.profile_name }}"
-    registry_id: "{{ account.account_id}}"
+    profile: "{{ aws_ecr_push_profile }}"
+    registry_id: "{{ aws_ecr_push_account }}"
   loop: "{{ aws_ecr_push_image }}"
   loop_control:
     loop_var: image
