@@ -1,6 +1,7 @@
 - name: Retag uploaded image to pipeline
   ecr_retag:
     region: "{{ aws_ecr_promote_region }}"
+    profile: "{{ aws_ecr_promote_profile }}"
     image: "{{ aws_ecr_promote_image }}"
     from: "change_{{ zuul.project.short_name }}_{{ zuul.change }}"
     to: pipeline_{{ zuul.pipeline }}

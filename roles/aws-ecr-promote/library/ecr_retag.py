@@ -15,7 +15,10 @@ from ansible.module_utils.basic import AnsibleModule
 
 
 def run(result, module):
-    session = boto3.session.Session(region_name=module.params['region'])
+    session = boto3.session.Session(
+        region_name=module.params['region'],
+        profile_name=module.params['profile'],
+    )
     client = session.client('ecr')
     existing_repos = set()
     repo_objects = {}
@@ -111,6 +114,7 @@ def main():
             image=dict(type='list', required=True),
             to=dict(type='list', required=True),
             region=dict(type='str', required=False),
+            profile=dict(type='str', required=False),
         )
         module_args['from'] = dict(type='str', required=True)
         # TODO: add the ec2/aws args the way other ec2 modules do
