@@ -23,3 +23,4 @@
         - test-aws-ecr
         - test-aws-ecr-2
       aws_ecr_promote_region: us-west-2
+      aws_ecr_promote_profile: default
